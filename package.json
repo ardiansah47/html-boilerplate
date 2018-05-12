@@ -1,0 +1,28 @@
+{
+  "name": "html-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "prod": "gulp --production",
+    "dev": "gulp"
+  },
+  "author": "Indra Ardiansah",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-latest": "^6.24.1",
+    "bootstrap": "^4.1.0",
+    "browser-sync": "^2.23.7",
+    "gulp": "^3.9.1",
+    "gulp-html": "^0.5.0",
+    "gulp-nunjucks-render": "^2.2.2",
+    "gulp-sass": "^4.0.1",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.3",
+    "webpack": "^4.7.0",
+    "webpack-stream": "^4.0.3"
+  },
+  "dependencies": {}
+}
