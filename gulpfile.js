@@ -7,39 +7,42 @@ const webpack       = require('webpack');
 const webpackStream = require('webpack-stream');
 const webpackConfig = require('./webpack.config.js');
 
-gulp.task('nunjucks', function () {
+//Gulp v4
+function nunjucks(){
     return gulp.src('src/views/**/*.+(html|nunjucks)')
-    // Renders template with nunjucks
     .pipe(nunjucksRender({
           path: ['src/templates/']
     }))
-    // output files
     .pipe(gulp.dest('public'))
     .pipe(browserSync.stream());
-});
+}
+function styles(){
+    return gulp.src('src/assets/sass/app.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('public/css'))
+    .pipe(browserSync.stream());
+}
 
-//compile sass 
-gulp.task('sass', function(){
-    return gulp.src(['src/assets/sass/app.scss'])
-      .pipe(sass())
-      .pipe(gulp.dest('public/css'))
-      .pipe(browserSync.stream());
-});
+function scripts(){
+    return gulp.src('src/assets/js/app.js')
+    .pipe(webpackStream(webpackConfig), webpack)
+    .pipe(gulp.dest('public/js'));
+}
 
-gulp.task('js', () => {
-    gulp.src('src/assets/js/app.js')
-      .pipe(webpackStream(webpackConfig), webpack)
-      .pipe(gulp.dest('public/js'));
-  });
-//Watch & Serve 
-gulp.task('serve', ['nunjucks', 'sass', 'js'], function(){
+function watch(){
     browserSync.init({
         server: './public'
-    })
-    gulp.watch(['src/assets/sass/**/*.scss'], ['sass']);
-    gulp.watch(['src/assets/js/**/*.js'], ['js']).on('change', browserSync.reload);
-    gulp.watch(['src/views/**/*.html', 'src/templates/**/*.html'], ['nunjucks']);
-});
+    });
+    gulp.watch(['src/assets/sass/**/*.scss'], styles).on('change', browserSync.reload);
+    gulp.watch(['src/assets/js/**/*.js'], scripts).on('change', browserSync.reload);
+    gulp.watch(['src/views/**/*.html', 'src/templates/**/*.html'], nunjucks);
+}
 
-//default 
-gulp.task('default', ['serve']);
+var build = gulp.series(gulp.parallel(styles, scripts, nunjucks));
+
+exports.nunjucks = nunjucks;
+exports.styles = styles;
+exports.scripts = scripts;
+exports.watch = watch;
+exports.default = build;
+
